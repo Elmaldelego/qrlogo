@@ -1,6 +1,6 @@
 import streamlit as st
 import qrcode
-from PIL import Image, ImageFilter
+from PIL import Image
 
 def generate_qr_with_logo(link, logo_path=None, corner_color="black"):
     # Generar el código QR
@@ -19,17 +19,16 @@ def generate_qr_with_logo(link, logo_path=None, corner_color="black"):
     if logo_path:
         try:
             # Cargar el logo
-            logo = Image.open(logo_path).convert("RGBA")  # Asegura transparencia
+            logo = Image.open(logo_path).convert("RGBA")  # Mantener transparencia si existe
+            
+            # Redimensionar el logo con un tamaño máximo del 20% del QR
             qr_width, qr_height = qr_image.size
-            logo_size = int(qr_width * 0.2)  # El logo ocupará el 20% del QR
-            logo = logo.resize((logo_size, logo_size), Image.LANCZOS)
+            max_logo_size = int(qr_width * 0.2)
+            logo.thumbnail((max_logo_size, max_logo_size), Image.LANCZOS)
             
-            # Aplicar filtro para suavizar la imagen del logo
-            logo = logo.filter(ImageFilter.SMOOTH)
-            
-            # Fusionar el logo con el QR
-            pos = ((qr_width - logo_size) // 2, (qr_height - logo_size) // 2)
-            qr_image.paste(logo, pos, mask=logo)
+            # Colocar el logo en el centro del QR
+            pos = ((qr_width - logo.width) // 2, (qr_height - logo.height) // 2)
+            qr_image.paste(logo, pos, mask=logo)  # Fusiona con la máscara de transparencia
         except Exception as e:
             st.error(f"Error al agregar el logo: {e}")
 
