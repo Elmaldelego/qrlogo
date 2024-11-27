@@ -47,7 +47,7 @@ logo_file = st.file_uploader("Sube un logo (opcional):", type=["png", "jpg", "jp
 # Lista desplegable para elegir color
 corner_color = st.selectbox(
     "Selecciona el color de las esquinas del QR:",
-    options=["black", "blue", "green", "red", "purple"]
+    options=["black", "blue", "green", "red", "purple", "orange"]
 )
 
 if st.button("Generar QR"):
